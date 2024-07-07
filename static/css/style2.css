@@ -1,0 +1,9 @@
+.device-mockup{
+    scale: 1.8;
+}
+main{
+    margin-top: 150px;
+}
+.feature-title{
+    white-space: nowrap;
+}

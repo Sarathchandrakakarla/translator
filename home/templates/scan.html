@@ -1,0 +1,127 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <title>Language Translator</title>
+  </head>
+  <style>
+    body,
+    html {
+      height: 100%;
+    }
+    .back-img {
+      background-image: url('{% static "img/la.jpg"%}');
+      filter: blur(5px);
+      height: 100%;
+      position: relative;
+    }
+    .container,
+    .preview,.card {
+      top: 0;
+      position: absolute;
+    }
+    .preview {
+      width: 600px;
+      height: 300px;
+      top: 30rem;
+      left: 25rem;
+    }
+    .card{
+      top: 3rem;
+      left: 25rem;
+      width: 35rem;
+    }
+    .upload{
+      width: 100%;
+      height: 12rem;
+      border-style: dashed;
+    }
+    .upload span{
+      position: absolute;
+      margin-top: 13%;
+      margin-left: 20%;
+    }
+    .File{
+      position: absolute;
+      width: 93%;
+      height: 11rem;
+      opacity: 0;
+    }
+
+    @media screen and (max-width:900px) {
+      body{
+        width: 100%;
+      }
+      .back-img{
+        width: 100%;
+      }
+      .card{
+        left: 3rem;
+        width: 80%;
+      }
+      
+    }
+  </style>
+  <body>
+    <div class="back-img"></div>
+    <form action="" method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      <div class="card">
+        <h5 class="card-header">Translate Your  Own Image!</h5>
+        <div class="card-body">
+          <p class="card-text">
+            <div class="upload" ondragover="this.style.borderColor = 'blue'" ondrop="this.style.borderColor = 'green'">
+                <span id="drag_title">Drag and drop or click to upload your image <br></span>
+              <input type="file" class="form-control File" accept="image/*" name="Image">
+            </div>
+          </p>
+          <select class="form-control" name="To_Lang" id="to_lang">
+            <option value="" selected disabled>
+              -- Select Output Language --
+            </option>
+            {% for lang in Languages %}
+            <option value="{{lang}}">{{lang}}</option>
+            {% endfor %}
+          </select>
+          <button class="btn btn-primary mt-4" type="submit">Translate</button>
+        </div>
+      </div>
+    </form>
+    <div class="preview">
+      <span id="preview_img_path" hidden></span>
+      <img src="" id="previewImg" alt="" width="100%" />
+      {% if Translated_Text %}
+      <p class="text-white">
+        <strong>Translated Text: <br> {{Translated_Text}}</strong>
+      </p>
+      {% endif %}
+    </div>
+
+    <script>
+      const inputImage = document.querySelector("input[type=file]");
+      const preview = document.querySelector(".preview");
+      function handleFiles() {
+        const file = this.files[0];
+        preview.style.display = "block";
+        preview_img_path.src = file;
+        drag_title.innerHTML = "<strong>" + file.name + "</strong>"
+        previewImg.src = URL.createObjectURL(file);
+      }
+      inputImage.addEventListener("change", handleFiles);
+    </script>
+  </body>
+</html>
